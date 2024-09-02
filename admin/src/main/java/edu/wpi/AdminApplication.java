@@ -2,11 +2,13 @@ package edu.wpi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
-@EnableEurekaServer
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
 @SpringBootApplication
-public class GatewayApplication {
+@EnableDiscoveryClient
+
+public class AdminApplication {
     public static void main(String[] args) {
-        SpringApplication.run(GatewayApplication.class, args);
+        SpringApplication.run(AdminApplication.class, args);
     }
 }
