@@ -9,3 +9,17 @@ server:
 spring:
   application:
     name: account
+  main:
+    allow-circular-references: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://database-1.cz6aoywes2lz.us-east-2.rds.amazonaws.com:5432/database-1
+    username: postgres
+    password: xiaobaitu123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
