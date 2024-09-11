@@ -20,3 +20,6 @@ Getting Started
 
 2. Start the Microservice Clients
    Once the Eureka server is running, you can start the other modules, which act as service clients. Each of these clients will register themselves with the Eureka server.(e.g., admin, exchange, gateway, market, and statistics).
+
+
+http://localhost:8080/swagger-ui/
