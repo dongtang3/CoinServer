@@ -16,7 +16,7 @@ Eureka (Service Discovery)
 
 Getting Started
 1. Start the Discovery Server
-   The discovery server is the core of this distributed system. It must be up and running before launching any other service clients. http://localhost:8761/
+   The discovery server is the core of this distributed system. It must be up and running before launching any other service clients. http://eureka-server:8761/
 
 2. Start the Microservice Clients
    Once the Eureka server is running, you can start the other modules, which act as service clients. Each of these clients will register themselves with the Eureka server.(e.g., admin, exchange, gateway, market, and statistics).
@@ -28,8 +28,12 @@ mvn clean package
 
 docker build -t account-service ./account
 docker build -t admin-service ./admin
-docker build -t discovery-service ./discovery
+docker build -t eureka-service ./discovery
 docker build -t gateway-service ./gateway
 docker build -t exchange-service ./exchange
 docker build -t market-service ./market
 docker build -t statistics-service ./statistics
+
+docker-compose up
+docker-compose down
+
