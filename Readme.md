@@ -23,3 +23,13 @@ Getting Started
 
 
 http://localhost:8080/swagger-ui/
+
+mvn clean package
+
+docker build -t account-service ./account
+docker build -t admin-service ./admin
+docker build -t discovery-service ./discovery
+docker build -t gateway-service ./gateway
+docker build -t exchange-service ./exchange
+docker build -t market-service ./market
+docker build -t statistics-service ./statistics
