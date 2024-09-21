@@ -1,53 +1,59 @@
 version: '3'
 services:
   eureka-server:
-    build: ./discovery
+    image: 853228521229.dkr.ecr.us-east-1.amazonaws.com/coinserver/eureka-service:latest
     ports:
       - "8761:8761"
     networks:
       - microservices-net
+
   account-service:
-    build: ./account
+    image: 853228521229.dkr.ecr.us-east-1.amazonaws.com/coinserver/account-service:latest
     ports:
       - "8080:8080"
     depends_on:
       - eureka-server
     networks:
       - microservices-net
+
   admin-service:
-    build: ./admin
+    image: 853228521229.dkr.ecr.us-east-1.amazonaws.com/coinserver/admin-service:latest
     ports:
       - "8081:8080"
     depends_on:
       - eureka-server
     networks:
       - microservices-net
+
   exchange-service:
-    build: ./exchange
+    image: 853228521229.dkr.ecr.us-east-1.amazonaws.com/coinserver/exchange-service:latest
     ports:
       - "8082:8080"
     depends_on:
       - eureka-server
     networks:
       - microservices-net
+
   gateway-service:
-    build: ./gateway
+    image: 853228521229.dkr.ecr.us-east-1.amazonaws.com/coinserver/gateway-service:latest
     ports:
       - "8085:8080"
     depends_on:
       - eureka-server
     networks:
       - microservices-net
+
   market-service:
-    build: ./market
+    image: 853228521229.dkr.ecr.us-east-1.amazonaws.com/coinserver/market-service:latest
     ports:
       - "8083:8080"
     depends_on:
       - eureka-server
     networks:
       - microservices-net
+
   statistics-service:
-    build: ./statistics
+    image: 853228521229.dkr.ecr.us-east-1.amazonaws.com/coinserver/statistics-service:latest
     ports:
       - "8084:8080"
     depends_on:
