@@ -11,7 +11,10 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-
+    env:
+      AWS_ACCOUNT_ID: 853228521229
+      AWS_REGION: us-east-1
+      SERVICE_PREFIX: coinserver/
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
