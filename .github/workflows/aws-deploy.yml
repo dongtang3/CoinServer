@@ -1,4 +1,4 @@
-name: Build and Deploy Java App to AWS
+name: Build, Push, and Deploy
 
 on:
   push:
@@ -9,66 +9,89 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the code from the repository
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # Set up Java JDK 17 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-    # Cache Maven dependencies to speed up the build
-    - name: Cache Maven packages
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
+      - name: Install Maven
+        run: sudo apt-get install -y maven
 
-    # Build the Java application using Maven
-    - name: Build with Maven
-      run: mvn clean install
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    # Upload the JAR artifact
-    - name: Upload JAR Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: java-app
-        path: target/*.jar
+      - name: Maven Build
+        run: mvn clean package
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
+      - name: Build, Tag, and Push Docker Images
+        env:
+          AWS_ACCOUNT_ID: 853228521229
+          AWS_REGION: us-east-1
+          SERVICE_PREFIX: coinserver/
+        run: |
+          docker build -t account-service ./account
+          docker tag account-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/account-service:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/account-service:latest
+          
+          docker build -t admin-service ./admin
+          docker tag admin-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/admin-service:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/admin-service:latest
+          
+          docker build -t eureka-service ./discovery
+          docker tag eureka-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/eureka-service:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/eureka-service:latest
+          
+          docker build -t gateway-service ./gateway
+          docker tag gateway-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/gateway-service:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/gateway-service:latest
+          
+          docker build -t exchange-service ./exchange
+          docker tag exchange-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/exchange-service:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/exchange-service:latest
+          
+          docker build -t market-service ./market
+          docker tag market-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/market-service:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/market-service:latest
+          
+          docker build -t statistics-service ./statistics
+          docker tag statistics-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/statistics-service:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$SERVICE_PREFIX/statistics-service:latest
 
-    steps:
-    # Checkout the code again
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    # Download the JAR artifact from the previous step
-    - name: Download JAR Artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: java-app
-
-    # Set up AWS credentials using GitHub secrets
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-
-    # Deploy to AWS EC2 (example with SCP and SSH)
-    - name: Deploy to EC2
-      run: |
-        scp -i path/to/your-ec2-key.pem target/your-app.jar ec2-user@your-ec2-ip:/path/to/deploy/
-        ssh -i path/to/your-ec2-key.pem ec2-user@your-ec2-ip "sudo systemctl restart your-java-app-service"
+      - name: Deploy to EC2
+        env:
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_KEY: ${{ secrets.EC2_KEY }}
+        run: |
+          echo "EC2_KEY" > ec2_key && chmod 600 ec2_key
+          ssh -o StrictHostKeyChecking=no -i $EC2_KEY $EC2_USER@$EC2_HOST << EOF
+            # Install Docker if not already installed
+            if ! command -v docker &> /dev/null
+            then
+                sudo yum update -y
+                sudo amazon-linux-extras install docker -y
+                sudo service docker start
+                sudo usermod -a -G docker ec2-user
+            fi
+          
+            # Install Docker Compose if not already installed
+            if ! command -v docker-compose &> /dev/null
+            then
+                sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                sudo chmod +x /usr/local/bin/docker-compose
+            fi
+          
+            # Login to ECR and pull latest images
+            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+            docker-compose -f /path/to/docker-compose.yml pull
+            docker-compose -f /path/to/docker-compose.yml up -d
+          EOF
