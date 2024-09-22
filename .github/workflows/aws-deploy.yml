@@ -32,12 +32,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-        with:
-          registry-type: "ecr"
-          region: us-east-1
+      - name: Login to Amazon ECR using AWS CLI
+        run: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 853228521229.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Maven Build
         run: mvn clean package
@@ -96,4 +93,14 @@ jobs:
             fi
           
             # Install Docker Compose if not already installed
-            if ! command -v docker-compose &>
+            if ! command -v docker-compose &> /dev/null
+            then
+                sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                sudo chmod +x /usr/local/bin/docker-compose
+            fi
+          
+            # Login to ECR and pull latest images
+            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+            docker-compose -f /home/ec2-user/docker-compose.yml pull
+            docker-compose -f /home/ec2-user/docker-compose.yml up -d
+          EOF
