@@ -80,6 +80,8 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_KEY: ${{ secrets.EC2_KEY }}
         run: |
+          echo "${{ secrets.EC2_KEY }}" | tr -d '\r' > ec2_key
+          chmod 600 ec2_key
           echo "${{ secrets.EC2_KEY }}" > ec2_key && chmod 600 ec2_key
           ssh -o StrictHostKeyChecking=no -i ec2_key $EC2_USER@$EC2_HOST << EOF
             # Install Docker if not already installed
