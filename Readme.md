@@ -37,3 +37,4 @@ docker build -t statistics-service ./statistics
 docker-compose up
 docker-compose down
 
+
