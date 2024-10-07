@@ -9,7 +9,7 @@ account, admin, exchange, gateway, market, statistics: These modules are the mic
 
 
 Prerequisites
-Java 17 or above
+Java 21 or above
 Maven 3.8.x or above
 Spring Boot 3.0
 Eureka (Service Discovery)

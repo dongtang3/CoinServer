@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-alpine
+FROM openjdk:21-jdk-alpine
 #Create a directory in the container
 WORKDIR /app
 #Copy the jar file to the container
