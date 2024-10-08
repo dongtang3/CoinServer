@@ -7,7 +7,7 @@ spring:
     allow-circular-references: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://coindb.cj2aqekuqit4.us-east-1.rds.amazonaws.com:5432/coindb
+    url: jdbc:postgresql://my-pg-server2024.postgres.database.azure.com:5432/coindb
     username: postgres
     password: Xiaobaitu123
   jpa:
