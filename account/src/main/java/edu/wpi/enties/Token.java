@@ -1,7 +1,6 @@
-package edu.wpi.token;
+package edu.wpi.enties;
 
 
-import edu.wpi.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

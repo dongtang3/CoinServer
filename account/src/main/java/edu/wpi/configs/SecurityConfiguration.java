@@ -13,9 +13,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static edu.wpi.user.Permission.*;
-import static edu.wpi.user.Role.ADMIN;
-import static edu.wpi.user.Role.MANAGER;
+import static edu.wpi.enties.Permission.*;
+import static edu.wpi.enties.Role.ADMIN;
+import static edu.wpi.enties.Role.MANAGER;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 

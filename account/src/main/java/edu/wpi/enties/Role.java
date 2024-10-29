@@ -1,4 +1,4 @@
-package edu.wpi.user;
+package edu.wpi.enties;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-import static edu.wpi.user.Permission.*;
+import static edu.wpi.enties.Permission.*;
 
 @RequiredArgsConstructor
 public enum Role {

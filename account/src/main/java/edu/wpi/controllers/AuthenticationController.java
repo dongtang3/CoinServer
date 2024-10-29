@@ -1,5 +1,9 @@
-package edu.wpi.auth;
+package edu.wpi.controllers;
 
+import edu.wpi.auth.AuthenticationRequest;
+import edu.wpi.auth.AuthenticationResponse;
+import edu.wpi.services.AuthenticationService;
+import edu.wpi.auth.RegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

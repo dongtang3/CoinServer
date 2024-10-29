@@ -1,7 +1,7 @@
 package edu.wpi.configs;
 
 import edu.wpi.auditing.ApplicationAuditAware;
-import edu.wpi.user.UserRepository;
+import edu.wpi.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

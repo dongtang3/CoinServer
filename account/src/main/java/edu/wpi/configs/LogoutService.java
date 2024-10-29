@@ -1,6 +1,6 @@
 package edu.wpi.configs;
 
-import edu.wpi.token.TokenRepository;
+import edu.wpi.repositories.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

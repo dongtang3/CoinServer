@@ -1,5 +1,8 @@
-package edu.wpi.user;
+package edu.wpi.services;
 
+import edu.wpi.repositories.UserRepository;
+import edu.wpi.enties.ChangePasswordRequest;
+import edu.wpi.enties.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;

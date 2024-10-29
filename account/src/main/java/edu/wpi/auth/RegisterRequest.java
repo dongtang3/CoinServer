@@ -1,6 +1,6 @@
 package edu.wpi.auth;
 
-import edu.wpi.user.Role;
+import edu.wpi.enties.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

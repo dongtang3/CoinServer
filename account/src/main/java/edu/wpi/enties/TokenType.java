@@ -1,4 +1,4 @@
-package edu.wpi.token;
+package edu.wpi.enties;
 
 public enum TokenType {
   BEARER

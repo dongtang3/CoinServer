@@ -1,6 +1,6 @@
 package edu.wpi.configs;
 
-import edu.wpi.token.TokenRepository;
+import edu.wpi.repositories.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

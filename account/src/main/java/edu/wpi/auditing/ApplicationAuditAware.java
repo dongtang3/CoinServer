@@ -1,7 +1,7 @@
 package edu.wpi.auditing;
 
 
-import edu.wpi.user.User;
+import edu.wpi.enties.User;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

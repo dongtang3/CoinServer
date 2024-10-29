@@ -1,5 +1,7 @@
-package edu.wpi.user;
+package edu.wpi.controllers;
 
+import edu.wpi.enties.ChangePasswordRequest;
+import edu.wpi.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;

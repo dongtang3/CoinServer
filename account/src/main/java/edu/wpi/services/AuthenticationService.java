@@ -1,12 +1,15 @@
-package edu.wpi.auth;
+package edu.wpi.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.wpi.auth.AuthenticationRequest;
+import edu.wpi.auth.AuthenticationResponse;
+import edu.wpi.auth.RegisterRequest;
 import edu.wpi.configs.JwtService;
-import edu.wpi.token.Token;
-import edu.wpi.token.TokenRepository;
-import edu.wpi.token.TokenType;
-import edu.wpi.user.User;
-import edu.wpi.user.UserRepository;
+import edu.wpi.enties.Token;
+import edu.wpi.repositories.TokenRepository;
+import edu.wpi.enties.TokenType;
+import edu.wpi.enties.User;
+import edu.wpi.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

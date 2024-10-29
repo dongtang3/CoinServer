@@ -1,8 +1,8 @@
 package edu.wpi;
 
-import edu.wpi.auth.AuthenticationService;
+import edu.wpi.services.AuthenticationService;
 import edu.wpi.auth.RegisterRequest;
-import edu.wpi.user.Role;
+import edu.wpi.enties.Role;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

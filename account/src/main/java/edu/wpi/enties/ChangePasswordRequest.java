@@ -1,4 +1,4 @@
-package edu.wpi.user;
+package edu.wpi.enties;
 
 import lombok.Builder;
 import lombok.Getter;
