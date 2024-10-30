@@ -1,12 +1,12 @@
 package edu.wpi.enties;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Builder
+@AllArgsConstructor
 public class ChangePasswordRequest {
 
     private String currentPassword;
