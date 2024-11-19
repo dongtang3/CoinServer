@@ -4,6 +4,7 @@ import edu.wpi.entities.ExchangeCoin;
 import edu.wpi.entities.CoinThumb;
 import edu.wpi.entities.ExchangeTrade;
 import edu.wpi.entities.KLine;
+import edu.wpi.exceptions.PriceNotFoundException;
 import edu.wpi.handler.KrakenWebSocketListener;
 import edu.wpi.repositories.ExchangeCoinRepository;
 import edu.wpi.repositories.ExchangeTradeRepository;
@@ -33,6 +34,18 @@ public class MarketService {
     private WebSocket webSocket;
     private final OkHttpClient client = new OkHttpClient();
 
+    // Add constants for trading pairs
+    private static final String[] TRADING_PAIRS = {
+        "XBT/USD",  // Bitcoin
+        "ETH/USD",  // Ethereum
+        "LTC/USD"   // Litecoin
+    };
+    public BigDecimal getCurrentPrice(String symbol) {
+        KLine latestKLine = kLineRepository.findFirstBySymbolOrderByTimeDesc(symbol)
+                .orElseThrow(() -> new PriceNotFoundException(
+                        "No price data available for " + symbol));
+        return latestKLine.getClosePrice();
+    }
     public MarketService(KLineRepository kLineRepository, ExchangeCoinRepository exchangeCoinRepository,
                          ExchangeTradeRepository exchangeTradeRepository) {
         this.kLineRepository = kLineRepository;
@@ -52,7 +65,7 @@ public class MarketService {
                 .url(webSocketUrl)
                 .build();
 
-        KrakenWebSocketListener listener = new KrakenWebSocketListener(kLineRepository) {
+        KrakenWebSocketListener listener = new KrakenWebSocketListener(kLineRepository,exchangeCoinRepository) {
             @Override
             public void onOpen(WebSocket webSocket, okhttp3.Response response) {
                 super.onOpen(webSocket, response);
@@ -80,20 +93,34 @@ public class MarketService {
         logger.info("WebSocket connection initiated");
     }
 
+    // Update subscription method
     private void subscribeToKline(WebSocket webSocket) {
-        String subscribeMessage = """
-                {
-                    "event": "subscribe",
-                    "pair": ["XBT/USD"],
-                    "subscription": {
-                        "name": "ohlc",
-                        "interval": 1
-                    }
+        // Subscribe to OHLC data for all pairs
+        String ohlcSubscription = """
+            {
+                "event": "subscribe",
+                "pair": ["XBT/USD","ETH/USD","LTC/USD"],
+                "subscription": {
+                    "name": "ohlc",
+                    "interval": 1
                 }
-                """;
+            }
+            """;
+        webSocket.send(ohlcSubscription);
 
-        webSocket.send(subscribeMessage);
-        logger.info("Subscribed to Kraken OHLC data for XBT/USD");
+        // Subscribe to ticker for all pairs
+        String tickerSubscription = """
+            {
+                "event": "subscribe",
+                "pair": ["XBT/USD","ETH/USD","LTC/USD"],
+                "subscription": {
+                    "name": "ticker"
+                }
+            }
+            """;
+        webSocket.send(tickerSubscription);
+        
+        logger.info("Subscribed to market data for BTC, ETH and LTC pairs");
     }
 
     @PreDestroy
