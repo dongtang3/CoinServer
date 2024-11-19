@@ -28,20 +28,16 @@ public class ExchangeTrade implements Serializable {
     @Column(nullable = false)
     private String symbol;
 
-    // Trade price
-    @Column(columnDefinition = "decimal(18,8) default 0")
-    private BigDecimal price;
-
-    // Trade amount
-    @Column(columnDefinition = "decimal(18,8) default 0")
+    @Column(precision = 18, scale = 8, columnDefinition = "decimal(18,8) default 0")
     private BigDecimal amount;
-
-    // Buy turnover
-    @Column(columnDefinition = "decimal(18,8) default 0")
+    
+    @Column(precision = 18, scale = 8, columnDefinition = "decimal(18,8) default 0")
     private BigDecimal buyTurnover;
-
-    // Sell turnover
-    @Column(columnDefinition = "decimal(18,8) default 0")
+    
+    @Column(precision = 18, scale = 8, columnDefinition = "decimal(18,8) default 0")
+    private BigDecimal price;
+    
+    @Column(precision = 18, scale = 8, columnDefinition = "decimal(18,8) default 0")
     private BigDecimal sellTurnover;
 
     // Trade direction (buy/sell)

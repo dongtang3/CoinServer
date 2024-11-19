@@ -1,10 +1,7 @@
 package edu.wpi.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -15,52 +12,37 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KLine {
-
-
-    public KLine(String period) {
-        this.period = period;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Open price
-    @Column(columnDefinition = "decimal(18,8) default 0")
-    private BigDecimal openPrice = BigDecimal.ZERO;
+    @Column(nullable = false)
+    private String symbol;
 
-    // Highest price
-    @Column(columnDefinition = "decimal(18,8) default 0")
-    private BigDecimal highestPrice = BigDecimal.ZERO;
-
-    // Lowest price
-    @Column(columnDefinition = "decimal(18,8) default 0")
-    private BigDecimal lowestPrice = BigDecimal.ZERO;
-
-    // Close price
-    @Column(columnDefinition = "decimal(18,8) default 0")
-    private BigDecimal closePrice = BigDecimal.ZERO;
-
-    // Timestamp of the K-line
     @Column(nullable = false)
     private long time;
 
-    // Period (e.g., "1m", "5m", "1h")
     @Column(nullable = false)
     private String period;
 
-    // Number of transactions
-    @Column(columnDefinition = "int default 0")
-    private int count;
+    @Column(name = "open_price", precision = 18, scale = 8, nullable = false)
+    private BigDecimal openPrice;
 
-    // Volume of the K-line
-    @Column(columnDefinition = "decimal(18,8) default 0")
-    private BigDecimal volume = BigDecimal.ZERO;
+    @Column(name = "highest_price", precision = 18, scale = 8, nullable = false)
+    private BigDecimal highestPrice;
 
-    // Turnover of the K-line
-    @Column(columnDefinition = "decimal(18,8) default 0")
-    private BigDecimal turnover = BigDecimal.ZERO;
+    @Column(name = "lowest_price", precision = 18, scale = 8, nullable = false)
+    private BigDecimal lowestPrice;
+
+    @Column(name = "close_price", precision = 18, scale = 8, nullable = false)
+    private BigDecimal closePrice;
 
     @Column(nullable = false)
-    private String symbol;
+    private BigDecimal volume;
+
+    @Column(nullable = false)
+    private BigDecimal turnover;
+
+    @Column(nullable = false)
+    private Integer count;
 }

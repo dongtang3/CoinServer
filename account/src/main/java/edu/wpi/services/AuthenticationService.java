@@ -5,6 +5,7 @@ import edu.wpi.auth.AuthenticationRequest;
 import edu.wpi.auth.AuthenticationResponse;
 import edu.wpi.auth.RegisterRequest;
 import edu.wpi.configs.JwtService;
+import edu.wpi.enties.Role;
 import edu.wpi.enties.Token;
 import edu.wpi.repositories.TokenRepository;
 import edu.wpi.enties.TokenType;
@@ -36,7 +37,7 @@ public class AuthenticationService {
             .lastname(request.getLastname())
             .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
-            .role(request.getRole())
+            .role(request.getRole()  == null ? Role.USER : request.getRole())
             .build();
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);

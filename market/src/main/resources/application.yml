@@ -13,11 +13,21 @@ spring:
     password: Xiaobaitu123
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    show-sql: false
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          socket: DEBUG
+        data: DEBUG
+        security: DEBUG
+    edu:
+      wpi: DEBUG

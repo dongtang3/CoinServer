@@ -1,8 +1,11 @@
 package edu.wpi.services;
 
+import edu.wpi.dto.UserDTO;
+import edu.wpi.exceptions.ResourceNotFoundException;
 import edu.wpi.repositories.UserRepository;
 import edu.wpi.enties.ChangePasswordRequest;
 import edu.wpi.enties.User;
+import edu.wpi.request.UpdateProfileRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,25 +17,42 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository repository;
-    public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
 
-        var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+    public UserDTO getUserProfile(Principal connectedUser) {
+        User user = userRepository.findByEmail(connectedUser.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        // check if the current password is correct
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new IllegalStateException("Wrong password");
+        return mapToDTO(user);
+    }
+
+    public UserDTO updateProfile(UpdateProfileRequest request, Principal connectedUser) {
+        User user = userRepository.findByEmail(connectedUser.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
         }
-        // check if the two new passwords are the same
-        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
-            throw new IllegalStateException("Password are not the same");
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+        if (request.getFirstname() != null) {
+            user.setFirstname(request.getFirstname());
+        }
+        if (request.getLastname() != null) {
+            user.setLastname(request.getLastname());
         }
 
-        // update the password
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user = userRepository.save(user);
+        return mapToDTO(user);
+    }
 
-        // save the new password
-        repository.save(user);
+    private UserDTO mapToDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setEmail(user.getEmail());
+        dto.setFirstname(user.getFirstname());
+        dto.setLastname(user.getLastname());
+        return dto;
     }
 }
