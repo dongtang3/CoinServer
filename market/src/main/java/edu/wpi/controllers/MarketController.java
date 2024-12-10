@@ -1,11 +1,10 @@
 package edu.wpi.controllers;
 
-import edu.wpi.entities.CoinThumb;
-import edu.wpi.entities.ExchangeCoin;
-import edu.wpi.entities.ExchangeTrade;
-import edu.wpi.entities.KLine;
+import edu.wpi.entities.*;
+import edu.wpi.exceptions.PriceNotFoundException;
 import edu.wpi.services.MarketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -50,4 +49,15 @@ public class MarketController {
     public BigDecimal getTradeVolume(@RequestParam String symbol, @RequestParam long timeStart, @RequestParam long timeEnd) {
         return marketService.findTradeVolume(symbol, timeStart, timeEnd);
     }
+
+    @GetMapping("/price")
+    public ResponseEntity<PriceResponse> getPrice(@RequestParam String symbol) {
+        try {
+            BigDecimal price = marketService.getCurrentPrice(symbol);
+            return ResponseEntity.ok(new PriceResponse(symbol, price));
+        } catch (PriceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

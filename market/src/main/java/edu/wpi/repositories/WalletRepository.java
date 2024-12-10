@@ -39,9 +39,9 @@ public interface WalletRepository extends JpaRepository<Wallet, String> {
     
     List<Wallet> findByUsdtBalanceGreaterThan(BigDecimal amount);
     
-    @Query("SELECT w.coinBalances[:symbol] FROM Wallet w WHERE w.userId = :userId")
+    @Query("SELECT w FROM Wallet w WHERE w.userId = :userId")
     Optional<BigDecimal> getCoinBalance(
-        @Param("userId") String userId, 
-        @Param("symbol") String symbol
+        @Param("userId") String userId
+
     );
 }
