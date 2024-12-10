@@ -10,7 +10,6 @@
     <modules>
         <module>account</module>
         <module>market</module>
-        <module>gateway</module>
     </modules>
 
     <parent>
